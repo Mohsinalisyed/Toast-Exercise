@@ -1,22 +1,21 @@
 import React from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import ToastActions from './Toast/ToastActions';
-import ToastContent from './Toast/ToastContent';
+import ToastActions from './ToastActions';
+import ToastContent from './ToastContent';
 
 
 
 
-
-const ToastContainer = ({
-  open,
-  message,
-  onClose,
-  onLike,
+function Toast({ 
+  open, 
+  message, 
+  onClose, 
+  onLike, 
   isLoading,
   error,
-  autoHideDuration = 6000,
-}) => {
+  autoHideDuration = 6000 
+}) {
   return (
     <Snackbar
       open={open}
@@ -49,6 +48,6 @@ const ToastContainer = ({
       </Alert>
     </Snackbar>
   );
-};
+}
 
-export default ToastContainer;
+export default Toast; 

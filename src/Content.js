@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { onMessage, fetchLikedFormSubmissions, saveLikedFormSubmission } from './service/mockServer';
-import Toast from './components/Toast';
 import LikedSubmissions from './components/LikedSubmissions';
 import CircularProgress from '@mui/material/CircularProgress';
 import { LoadingBox } from './components/style';
 import { Box } from '@mui/material';
+import { ToastContainer } from './components/Toast/index';
 
 function Content() {
   const [currentToast, setCurrentToast] = useState(null);
@@ -76,7 +76,7 @@ function Content() {
   return (
     <Box>
       {currentToast && (
-        <Toast
+        <ToastContainer
           open={currentToast.open}
           message={currentToast.data}
           onClose={handleToastClose}

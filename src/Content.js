@@ -15,7 +15,7 @@ function Content() {
     error,
     loadSubmissions,
     addSubmission,
-    setError
+    setError,
   } = useLikedSubmissions();
 
   const {
@@ -23,7 +23,7 @@ function Content() {
     isLiking,
     handleToastClose,
     handleToastLike,
-    showToast
+    showToast,
   } = useToast(addSubmission);
 
   useEffect(() => {
@@ -71,8 +71,8 @@ function Content() {
           <CircularProgress />
         </LoadingBox>
       ) : (
-        <LikedSubmissions 
-          submissions={likedSubmissions} 
+        <LikedSubmissions
+          submissions={likedSubmissions}
           onClearAll={handleClearAll}
         />
       )}

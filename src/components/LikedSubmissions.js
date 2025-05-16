@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import { ListItemText, Typography, Box, useTheme } from "@mui/material";
+import { ListItemText, Typography, Box, useTheme, Button } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PersonIcon from "@mui/icons-material/Person";
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import {
   StyledPaper,
   StyledListItem,
@@ -9,7 +10,7 @@ import {
   StyledList,
 } from "./style.js";
 
-function LikedSubmissions({ submissions }) {
+function LikedSubmissions({ submissions, onClearAll }) {
   const theme = useTheme();
   const listRef = useRef(null);
   const lastItemRef = useRef(null);
@@ -42,17 +43,26 @@ function LikedSubmissions({ submissions }) {
 
   return (
     <StyledPaper elevation={3}>
-      <Typography
-        variant="h5"
-        sx={{
-          mb: 2,
-          fontWeight: "bold",
-          color: theme.palette.primary.main,
-          textAlign: "center",
-        }}
-      >
-        Liked Submissions
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: "bold",
+            color: theme.palette.primary.main,
+          }}
+        >
+          Liked Submissions
+        </Typography>
+        <Button
+          variant="outlined"
+          color="error"
+          startIcon={<DeleteSweepIcon />}
+          onClick={onClearAll}
+          size="small"
+        >
+          Clear All
+        </Button>
+      </Box>
       <StyledList ref={listRef}>
         {submissions.map((submission, index) => (
           <StyledListItem

@@ -43,6 +43,16 @@ function Content() {
     setError(null);
   };
 
+  const handleClearAll = async () => {
+    try {
+      await localStorage.clear("formSubmissions");
+      await loadSubmissions();
+    } catch (error) {
+      console.error("Failed to refresh submissions:", error);
+      setError("Failed to refresh submissions. Please try again.");
+    }
+  };
+
   return (
     <Box>
       {currentToast && (
@@ -61,7 +71,10 @@ function Content() {
           <CircularProgress />
         </LoadingBox>
       ) : (
-        <LikedSubmissions submissions={likedSubmissions} />
+        <LikedSubmissions 
+          submissions={likedSubmissions} 
+          onClearAll={handleClearAll}
+        />
       )}
     </Box>
   );

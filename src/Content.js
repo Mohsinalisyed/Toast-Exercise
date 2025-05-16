@@ -1,88 +1,46 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  onMessage,
-  fetchLikedFormSubmissions,
-  saveLikedFormSubmission,
-} from "./service/mockServer";
+import React, { useEffect } from "react";
+import { onMessage } from "./service/mockServer";
 import LikedSubmissions from "./components/LikedSubmissions";
 import CircularProgress from "@mui/material/CircularProgress";
 import { LoadingBox } from "./components/style";
 import { Box } from "@mui/material";
 import { ToastContainer } from "./components/Toast/index";
+import { useLikedSubmissions } from "./hooks/useLikedSubmissions";
+import { useToast } from "./hooks/useToast";
 
 function Content() {
-  const [currentToast, setCurrentToast] = useState(null);
-  const [likedSubmissions, setLikedSubmissions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isLiking, setIsLiking] = useState(false);
-  const [error, setError] = useState(null);
+  const {
+    likedSubmissions,
+    loading,
+    error,
+    loadSubmissions,
+    addSubmission,
+    setError
+  } = useLikedSubmissions();
 
-  const loadLikedSubmissions = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await fetchLikedFormSubmissions();
-      if (response.status === 200) {
-        setLikedSubmissions(response.formSubmissions);
-        setError(null);
-      } else {
-        setError("Failed to load submissions. Please try again.");
-      }
-    } catch (error) {
-      console.error("Failed to load liked submissions:", error);
-      setError("Failed to load submissions. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const {
+    currentToast,
+    isLiking,
+    handleToastClose,
+    handleToastLike,
+    showToast
+  } = useToast(addSubmission);
 
   useEffect(() => {
-    loadLikedSubmissions();
+    loadSubmissions();
 
     const unsubscribe = onMessage((formSubmission) => {
-      setCurrentToast({
-        ...formSubmission,
-        open: true,
-      });
+      showToast(formSubmission);
     });
 
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [loadLikedSubmissions]);
+  }, [loadSubmissions, showToast]);
 
-  const handleToastClose = () => {
-    setCurrentToast(null);
+  const handleClose = () => {
+    handleToastClose();
     setError(null);
-  };
-
-  const handleToastLike = async () => {
-    if (!currentToast || isLiking) return;
-
-    try {
-      setIsLiking(true);
-      setError(null);
-      const updatedSubmission = {
-        ...currentToast,
-        data: {
-          ...currentToast.data,
-          liked: true,
-        },
-      };
-
-      const response = await saveLikedFormSubmission(updatedSubmission);
-      if (response.status === 500) {
-        setError("Failed to save submission. Please try again.");
-        return;
-      }
-
-      setLikedSubmissions((prev) => [...prev, updatedSubmission]);
-      setCurrentToast(null);
-    } catch (error) {
-      console.error("Failed to save liked submission:", error);
-      setError("Failed to save submission. Please try again.");
-    } finally {
-      setIsLiking(false);
-    }
   };
 
   return (
@@ -91,7 +49,7 @@ function Content() {
         <ToastContainer
           open={currentToast.open}
           message={currentToast.data}
-          onClose={handleToastClose}
+          onClose={handleClose}
           onLike={handleToastLike}
           isLiked={currentToast.data.liked}
           isLoading={isLiking}

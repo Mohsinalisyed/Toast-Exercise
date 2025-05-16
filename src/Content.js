@@ -3,7 +3,8 @@ import { onMessage, fetchLikedFormSubmissions, saveLikedFormSubmission } from '.
 import Toast from './components/Toast';
 import LikedSubmissions from './components/LikedSubmissions';
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import { LoadingBox } from './components/style';
+import { Box } from '@mui/material';
 
 function Content() {
   const [currentToast, setCurrentToast] = useState(null);
@@ -73,7 +74,7 @@ function Content() {
   };
 
   return (
-    <div>
+    <Box>
       {currentToast && (
         <Toast
           open={currentToast.open}
@@ -86,13 +87,13 @@ function Content() {
         />
       )}
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <LoadingBox>
           <CircularProgress />
-        </Box>
+        </LoadingBox>
       ) : (
         <LikedSubmissions submissions={likedSubmissions} />
       )}
-    </div>
+    </Box>
   );
 }
 

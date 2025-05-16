@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { onMessage, fetchLikedFormSubmissions, saveLikedFormSubmission } from './service/mockServer';
-import LikedSubmissions from './components/LikedSubmissions';
-import CircularProgress from '@mui/material/CircularProgress';
-import { LoadingBox } from './components/style';
-import { Box } from '@mui/material';
-import { ToastContainer } from './components/Toast/index';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  onMessage,
+  fetchLikedFormSubmissions,
+  saveLikedFormSubmission,
+} from "./service/mockServer";
+import LikedSubmissions from "./components/LikedSubmissions";
+import CircularProgress from "@mui/material/CircularProgress";
+import { LoadingBox } from "./components/style";
+import { Box } from "@mui/material";
+import { ToastContainer } from "./components/Toast/index";
 
 function Content() {
   const [currentToast, setCurrentToast] = useState(null);
@@ -13,34 +17,42 @@ function Content() {
   const [isLiking, setIsLiking] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // Load liked submissions on mount
-    loadLikedSubmissions();
-
-    // Subscribe to new form submissions
-    onMessage((formSubmission) => {
-      setCurrentToast({
-        ...formSubmission,
-        open: true
-      });
-    });
-  }, []);
-
-  const loadLikedSubmissions = async () => {
+  const loadLikedSubmissions = useCallback(async () => {
     try {
+      setLoading(true);
       const response = await fetchLikedFormSubmissions();
       if (response.status === 200) {
         setLikedSubmissions(response.formSubmissions);
+        setError(null);
+      } else {
+        setError("Failed to load submissions. Please try again.");
       }
     } catch (error) {
-      console.error('Failed to load liked submissions:', error);
+      console.error("Failed to load liked submissions:", error);
+      setError("Failed to load submissions. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadLikedSubmissions();
+
+    const unsubscribe = onMessage((formSubmission) => {
+      setCurrentToast({
+        ...formSubmission,
+        open: true,
+      });
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [loadLikedSubmissions]);
 
   const handleToastClose = () => {
     setCurrentToast(null);
+    setError(null);
   };
 
   const handleToastLike = async () => {
@@ -53,21 +65,21 @@ function Content() {
         ...currentToast,
         data: {
           ...currentToast.data,
-          liked: true
-        }
+          liked: true,
+        },
       };
 
       const response = await saveLikedFormSubmission(updatedSubmission);
       if (response.status === 500) {
-        setError('Failed to save submission. Please try again.');
+        setError("Failed to save submission. Please try again.");
         return;
       }
-      
-      setLikedSubmissions([...likedSubmissions, updatedSubmission]);
+
+      setLikedSubmissions((prev) => [...prev, updatedSubmission]);
       setCurrentToast(null);
     } catch (error) {
-      console.error('Failed to save liked submission:', error);
-      setError('Failed to save submission. Please try again.');
+      console.error("Failed to save liked submission:", error);
+      setError("Failed to save submission. Please try again.");
     } finally {
       setIsLiking(false);
     }

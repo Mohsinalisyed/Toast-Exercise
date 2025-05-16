@@ -1,20 +1,18 @@
-import React from 'react';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import ToastActions from './ToastActions';
-import ToastContent from './ToastContent';
+import React from "react";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import ToastActions from "./ToastActions";
+import ToastContent from "./ToastContent";
+import { AlertStyled } from "../style";
 
-
-
-
-function Toast({ 
-  open, 
-  message, 
-  onClose, 
-  onLike, 
+function ToastContainer({
+  open,
+  message,
+  onClose,
+  onLike,
   isLoading,
   error,
-  autoHideDuration = 6000 
+  autoHideDuration = 6000,
 }) {
   return (
     <Snackbar
@@ -26,14 +24,8 @@ function Toast({
       <Alert
         severity={error ? "error" : ""}
         sx={{
-          minHeight: "80px",
-          minWidth: "400px",
-          display: "flex",
+          ...AlertStyled,
           backgroundColor: error ? "#d32f2f" : "black",
-          color: "white",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 16px",
         }}
         action={
           <ToastActions
@@ -50,4 +42,4 @@ function Toast({
   );
 }
 
-export default Toast; 
+export default ToastContainer;

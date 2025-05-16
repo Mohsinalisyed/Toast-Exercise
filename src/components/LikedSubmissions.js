@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
+import { ListItemText, Typography, Box, useTheme } from "@mui/material";
+import EmailIcon from "@mui/icons-material/Email";
+import PersonIcon from "@mui/icons-material/Person";
 import {
-  ListItemText,
-  Typography,
-  Box,
-  useTheme,
-} from '@mui/material';
-import EmailIcon from '@mui/icons-material/Email';
-import PersonIcon from '@mui/icons-material/Person';
-import { StyledPaper, StyledListItem, StyledAvatar, StyledList } from './style.js';
+  StyledPaper,
+  StyledListItem,
+  StyledAvatar,
+  StyledList,
+} from "./style.js";
 
 function LikedSubmissions({ submissions }) {
   const theme = useTheme();
@@ -16,9 +16,9 @@ function LikedSubmissions({ submissions }) {
 
   useEffect(() => {
     if (lastItemRef.current) {
-      lastItemRef.current.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'end'
+      lastItemRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
       });
     }
   }, [submissions]);
@@ -27,10 +27,10 @@ function LikedSubmissions({ submissions }) {
     return (
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '200px',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "200px",
         }}
       >
         <Typography variant="h6" color="textSecondary">
@@ -46,9 +46,9 @@ function LikedSubmissions({ submissions }) {
         variant="h5"
         sx={{
           mb: 2,
-          fontWeight: 'bold',
+          fontWeight: "bold",
           color: theme.palette.primary.main,
-          textAlign: 'center',
+          textAlign: "center",
         }}
       >
         Liked Submissions
@@ -66,16 +66,16 @@ function LikedSubmissions({ submissions }) {
               primary={
                 <Typography
                   variant="subtitle1"
-                  sx={{ fontWeight: 'bold', color: theme.palette.text.primary }}
+                  sx={{ fontWeight: "bold", color: theme.palette.text.primary }}
                 >
                   {submission.data.firstName} {submission.data.lastName}
                 </Typography>
               }
               secondary={
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+                <Box sx={{ display: "flex", alignItems: "center", mt: 0.5 }}>
                   <EmailIcon
                     sx={{
-                      fontSize: '1rem',
+                      fontSize: "1rem",
                       mr: 1,
                       color: theme.palette.text.secondary,
                     }}
@@ -96,4 +96,4 @@ function LikedSubmissions({ submissions }) {
   );
 }
 
-export default LikedSubmissions; 
+export default LikedSubmissions;

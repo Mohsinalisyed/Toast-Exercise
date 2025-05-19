@@ -8,11 +8,11 @@ export const useLikedSubmissions = () => {
 
   const loadSubmissions = useCallback(async () => {
     try {
+      setError(null);
       setLoading(true);
       const response = await fetchLikedFormSubmissions();
       if (response.status === 200) {
         setLikedSubmissions(response.formSubmissions);
-        setError(null);
       } else {
         setError("Failed to load submissions. Please try again.");
       }
